@@ -1,0 +1,8 @@
+dbs:
+  - path: /data/igreja.db
+
+    replicas:
+      - type: s3
+        bucket: ${LITESTREAM_BUCKET}
+        path: sqlite/epauta
+        region: ${AWS_REGION}

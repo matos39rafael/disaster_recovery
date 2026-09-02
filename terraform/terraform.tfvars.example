@@ -1,0 +1,15 @@
+project_name   = "lab-disaster-recovery"
+aws_region     = "sa-east-1"
+aws_cidr_block = "10.1.0.0/16"
+
+availability_zone = "sa-east-1a"
+public_cidr       = "10.1.0.0/24"
+
+domain_name = "app.example.com"
+app_image = "your-dockerhub-user/your-app:1.0"
+cloudflare_account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+cloudflare_zone_id    = "YOUR_CLOUDFLARE_ZONE_ID"
+on-prem_tunnel_id     = "YOUR_ONPREM_TUNNEL_ID"
+
+deploy_dr          = false
+active_environment = "onprem"

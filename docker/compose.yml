@@ -1,0 +1,77 @@
+services:
+
+  app:
+    image: ${APP_IMAGE}
+    restart: unless-stopped
+    user: "${APP_UID}:${APP_GID}"
+
+    volumes:
+      - ${DATA_DIR}:/data
+
+    environment:
+      DATABASE_PATH: /data/igreja.db
+      SECRET_KEY: ${SECRET_KEY}
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      FLASK_ENV: ${FLASK_ENV}
+
+    ports:
+      - "127.0.0.1:5000:5000"
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    networks:
+      - dr
+
+
+  litestream:
+    image: litestream/litestream:0.5.17
+    restart: unless-stopped
+
+    user: "${APP_UID}:${APP_GID}"
+
+    command:
+      - replicate
+      - -config
+      - /etc/litestream.yml
+
+    volumes:
+      - ${DATA_DIR}:/data
+      - ${LITESTREAM_DIR}/litestream.yml:/etc/litestream.yml:ro
+
+    environment:
+      AWS_REGION: ${AWS_REGION}
+      LITESTREAM_BUCKET: ${LITESTREAM_BUCKET}
+
+    security_opt:
+      - no-new-privileges:true
+
+    networks:
+      - dr
+
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+
+    command:
+      - tunnel
+      - run
+
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN}
+
+    security_opt:
+      - no-new-privileges:true
+
+    networks:
+      - dr
+
+
+networks:
+  dr:
+    driver: bridge
