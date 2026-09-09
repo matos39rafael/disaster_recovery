@@ -4,8 +4,8 @@ set -Eeuo pipefail
 : "${ONPREM_HOST:?ONPREM_HOST is required}"
 : "${ONPREM_USER:?ONPREM_USER is required}"
 : "${ONPREM_SSH_KEY:?ONPREM_SSH_KEY is required}"
-: "${ONPREM_PROJECT_DIR:?ONPREM_PROJECT_DIR is required}" 
-: "${APP_HOSTNAME:?APP_HOSTNAME is required}" 
+: "${ONPREM_PROJECT_DIR:?ONPREM_PROJECT_DIR is required}"
+: "${APP_HOSTNAME:?APP_HOSTNAME is required}"
 
 
 TRAEFIK_NETWORK="proxy"
@@ -157,4 +157,3 @@ REMOTE_SCRIPT
 
 
 log "On-premises health validation completed successfully"
-

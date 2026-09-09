@@ -8,6 +8,7 @@ echo "========================================"
 echo " ePauta DR - User Data"
 echo "========================================"
 
+# shellcheck disable=SC2034
 PROJECT_DIR="/opt/epauta"
 
 echo "[INFO] Creating project directories"
@@ -49,10 +50,19 @@ RESTORE_EOF
 echo "[INFO] Starting bootstrap"
 chmod 750 "$${PROJECT_DIR}/scripts/"*.sh
 
+# shellcheck disable=SC2154
 export AWS_REGION="${aws_region}"
+
+# shellcheck disable=SC2154
 export LITESTREAM_BUCKET="${litestream_bucket}"
+
+# shellcheck disable=SC2154
 export EPAUTA_HOST="${epauta_host}"
+
+# shellcheck disable=SC2154
 export APP_IMAGE="${app_image}"
+
+# shellcheck disable=SC2154
 export TUNNEL_TOKEN="${tunnel_token}"
 
 "$${PROJECT_DIR}/scripts/bootstrap.sh"

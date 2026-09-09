@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-: "${APP_HOSTNAME:?APP_HOSTNAME is required}" 
+: "${APP_HOSTNAME:?APP_HOSTNAME is required}"
 
 HEALTHCHECK_RETRIES="${HEALTHCHECK_RETRIES:-10}"
 HEALTHCHECK_INTERVAL="${HEALTHCHECK_INTERVAL:-3}"

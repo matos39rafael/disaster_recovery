@@ -26,7 +26,3 @@ aws ssm wait command-executed \
 aws ssm get-command-invocation \
   --command-id "$COMMAND_ID" \
   --instance-id "${DR_INSTANCE_ID}"
-
-
-
-

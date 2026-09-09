@@ -1,31 +1,31 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-: "${ONPREM_HOST:?ONPREM_HOST is required}" 
-: "${ONPREM_USER:?ONPREM_USER is required}" 
-: "${ONPREM_SSH_KEY:?ONPREM_SSH_KEY is required}" 
-: "${ONPREM_PROJECT_DIR:?ONPREM_PROJECT_DIR is required}" 
-: "${ONPREM_ENV_FILE:?ONPREM_ENV_FILE is required}" 
+: "${ONPREM_HOST:?ONPREM_HOST is required}"
+: "${ONPREM_USER:?ONPREM_USER is required}"
+: "${ONPREM_SSH_KEY:?ONPREM_SSH_KEY is required}"
+: "${ONPREM_PROJECT_DIR:?ONPREM_PROJECT_DIR is required}"
+: "${ONPREM_ENV_FILE:?ONPREM_ENV_FILE is required}"
 
-log() { 
+log() {
   printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"
 }
 
 die() {
    printf '[%s] [ERROR] %s\n' \
     "$(date '+%Y-%m-%d %H:%M:%S')" \
-    "$*" >&2 
-  
-  exit 1 
+    "$*" >&2
+
+  exit 1
 }
 
-command -v ssh >/dev/null 2>&1 || die "ssh command not found" 
+command -v ssh >/dev/null 2>&1 || die "ssh command not found"
 [[ -f "${ONPREM_SSH_KEY}" ]] || die "SSH private key not found: ${ONPREM_SSH_KEY}"
 
 
-log "Starting on-premises stack" 
-log "Host : ${ONPREM_HOST}" 
-log "User : ${ONPREM_USER}" 
+log "Starting on-premises stack"
+log "Host : ${ONPREM_HOST}"
+log "User : ${ONPREM_USER}"
 
 
 ssh \

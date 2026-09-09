@@ -22,13 +22,12 @@ output "s3_bucket_arn" {
   value       = aws_s3_bucket.disaster_recovery.arn
 }
 
-output "dr_backup_bucket"{
+output "dr_backup_bucket" {
   description = "Bucket used by litestream"
-  value = aws_s3_bucket.disaster_recovery.bucket
+  value       = aws_s3_bucket.disaster_recovery.bucket
 }
 
 output "aws_region" {
   description = "AWS region used by the DR environment"
   value       = var.aws_region
 }
-

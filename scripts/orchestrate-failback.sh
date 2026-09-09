@@ -14,7 +14,7 @@ DATA_DIR=/opt/epauta/data
 LITESTREAM_DIR=/opt/epauta/litestream
 BUCKET="$(terraform -chdir="$TERRAFORM_DIR" output -raw dr_backup_bucket)"
 REGION="$(terraform -chdir="$TERRAFORM_DIR" output -raw aws_region)"
-ONPREM_PROJECT_DIR="/home/ubuntu/docker/epauta_v2" 
+ONPREM_PROJECT_DIR="/home/ubuntu/docker/epauta_v2"
 ONPREM_ENV_FILE="${ONPREM_PROJECT_DIR}/.env"
 APP_HOSTNAME="epauta.rafaelmatos.me"
 
@@ -108,4 +108,3 @@ step "7. Deprovisioning AWS DR"
 "${SCRIPT_DIR}/terraform/destroy-dr.sh"
 
 echo "[OK] Failback completed successfully"
-

@@ -47,7 +47,7 @@ terraform \
     -chdir="${TERRAFORM_DIR}" \
     plan -var-file=environments/normal.tfvars \
     -var-file=terraform.tfvars \
-    -out=${PLAN_FILE}
+    -out="${PLAN_FILE}"
 
 
 log "Applying destroy dr enviroment..."
@@ -59,4 +59,3 @@ terraform \
 
 
 log "DR environment destroyed successfully."
-

@@ -47,7 +47,7 @@ terraform \
     -chdir="${TERRAFORM_DIR}" \
     plan -var-file=environments/failback.tfvars \
     -var-file=terraform.tfvars \
-    -out=${PLAN_FILE}
+    -out="${PLAN_FILE}"
 
 
 log "Applying cutover to failback..."
@@ -59,4 +59,3 @@ terraform \
 
 
 log "Traffic transition completed successfully."
-
