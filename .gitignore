@@ -19,6 +19,10 @@ terraform.rc
 
 !*.tfvars.example
 !terraform.tfvars.example
+!terraform/environments/normal.tfvars
+!terraform/environments/dr.tfvars
+!terraform/environments/failback.tfvars
+
 
 .env
 .env.*

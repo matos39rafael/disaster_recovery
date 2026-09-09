@@ -13,9 +13,9 @@ resource "aws_instance" "DR_instance" {
 
     compose     = file("${path.module}/../docker/compose.yml")
     litestream  = file("${path.module}/../docker/litestream.yml")
-    bootstrap   = file("${path.module}/../scripts/bootstrap.sh")
-    healthcheck = file("${path.module}/../scripts/healthcheck.sh")
-    restore     = file("${path.module}/../scripts/restore.sh")
+    bootstrap   = file("${path.module}/../scripts/dr/bootstrap.sh")
+    healthcheck = file("${path.module}/../scripts/dr/healthcheck.sh")
+    restore     = file("${path.module}/../scripts/dr/restore.sh")
 
     aws_region        = var.aws_region
     litestream_bucket = aws_s3_bucket.disaster_recovery.bucket
