@@ -13,13 +13,13 @@ set -Eeuo pipefail
 VOLUME="${ONPREM_VOLUME:-epauta_v2_data}"
 DB_FILE="${DB_FILE:-igreja.db}"
 LITESTREAM_IMAGE="${LITESTREAM_IMAGE:-litestream/litestream:0.5.17}"
-SQLITE_IMAGE="${SQLITE_IMAGE:-keinos/sqlite3:latest}"
+SQLITE_IMAGE="${SQLITE_IMAGE:-keinos/sqlite3:3.53.4}"
 ALPINE_IMAGE="${ALPINE_IMAGE:-alpine:3.22}"
 
 APP_UID="${APP_UID:-1000}"
 APP_GID="${APP_GID:-1000}"
 
-FAILBACK_MARKER="${FAILBACK_MARKER:-TESTE_DR_FAILBACK}"
+FAILBACK_MARKER="${FAILBACK_MARKER:-TESTE_DR_FAILBACK_01}"
 
 
 log() {
@@ -207,64 +207,69 @@ docker run --rm \
         "${APP_GID}"
 
 
-log "Running SQLite integrity_check"
+log "Validating restored SQLite database"
 
-INTEGRITY_RESULT="$(
+VALIDATION_RESULT="$(
     docker run --rm \
+        --user 0:0 \
         -v "${VOLUME}:/data:ro" \
         "${SQLITE_IMAGE}" \
+        sh -c '
+            DB_PATH="$1"
+            FAILBACK_MARKER="$2"
+
+            cp "${DB_PATH}" /tmp/igreja.db
+
+            INTEGRITY="$(sqlite3 /tmp/igreja.db "PRAGMA integrity_check;")"
+
+            MARKER_COUNT="$(
+                sqlite3 /tmp/igreja.db "
+                    SELECT COUNT(*)
+                    FROM item
+                    WHERE titulo = '\''${FAILBACK_MARKER}'\'';
+                "
+            )"
+
+            printf "INTEGRITY=%s\n" "${INTEGRITY}"
+            printf "MARKER_COUNT=%s\n" "${MARKER_COUNT}"
+        ' sh \
         "${DB_PATH}" \
-        "PRAGMA integrity_check;"
+        "${FAILBACK_MARKER}"
+)"
+
+INTEGRITY_RESULT="$(
+    printf '%s\n' "${VALIDATION_RESULT}" \
+    | awk -F= '/^INTEGRITY=/{print $2}'
+)"
+
+MARKER_COUNT="$(
+    printf '%s\n' "${VALIDATION_RESULT}" \
+    | awk -F= '/^MARKER_COUNT=/{print $2}'
 )"
 
 if [[ "${INTEGRITY_RESULT}" != "ok" ]]; then
-
     die "SQLite integrity_check failed: ${INTEGRITY_RESULT}"
-
 fi
 
-log "SQLite integrity_check: OK"
-
-
-log "Searching for DR marker: ${FAILBACK_MARKER}"
-
-MARKER_COUNT="$(
-    docker run --rm \
-        -v "${VOLUME}:/data:ro" \
-        "${SQLITE_IMAGE}" \
-        "${DB_PATH}" \
-        "
-        SELECT COUNT(*)
-        FROM item
-        WHERE titulo = '${FAILBACK_MARKER}';
-        "
-)"
-
-
 if ! [[ "${MARKER_COUNT}" =~ ^[0-9]+$ ]]; then
-
-    die "Unexpected SQLite result: ${MARKER_COUNT}"
-
+    die "Unexpected marker count result: ${MARKER_COUNT}"
 fi
 
 if (( MARKER_COUNT < 1 )); then
-
-    die "Marker '${FAILBACK_MARKER}' not found in restored database"
-
+    die "Failback marker '${FAILBACK_MARKER}' was not found in restored database"
 fi
-
-log "Marker '${FAILBACK_MARKER}' found (${MARKER_COUNT} record(s))"
 
 
 log "============================================================"
 log "ON-PREMISES DATABASE RESTORE SUCCESSFUL"
 log ""
-log "SQLite integrity : OK"
-log "DR marker        : FOUND"
+log "SQLite integrity_check: OK"
+log "Failback marker '${FAILBACK_MARKER}' found: ${MARKER_COUNT} record(s)"
 log "Database         : ${DB_FILE}"
 log ""
 log "Application remains STOPPED"
 log "============================================================"
+
 
 REMOTE_SCRIPT
 
