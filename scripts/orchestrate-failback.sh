@@ -71,9 +71,6 @@ export TERRAFORM_DIR
 export DR_INSTANCE_ID
 export BUCKET
 export REGION
-export ONPREM_HOST="100.84.230.51"
-export ONPREM_USER="ubuntu"
-export ONPREM_SSH_KEY="${HOME}/.ssh/id_ed25519"
 export ONPREM_PROJECT_DIR
 export ONPREM_ENV_FILE
 export APP_HOSTNAME

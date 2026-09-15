@@ -74,4 +74,5 @@ services:
 
 networks:
   dr:
+    name: dr
     driver: bridge
